@@ -2,59 +2,59 @@ import { useRef, useState, useEffect } from 'react';
 
 const ITEMS = [
   {
-    id: 0, date: '2024 — Present', badge: 'Current',
+    id: 0, date: 'NOV 2024 — Present', badge: 'Current',
     role: 'Full Stack Developer Intern',
-    company: 'YourCompany', location: 'Nagpur, MH', type: 'Work',
-    desc: 'Building production features for a SaaS platform used by 50k+ users. Engineered REST APIs, cut MongoDB query times by 40%, and shipped React components adopted across the app in bi-weekly sprints.',
+    company: 'COJAG Smart Technology', location: 'Nagpur, MH', type: 'Work',
+    desc: 'Built full-stack features for a MERN-based application, developing scalable REST APIs with Node.js and Express, optimizing MongoDB queries for faster data retrieval, and delivering reusable React components for an improved user experience.',
     points: [
-      'Built 8 REST API endpoints consumed by 50k+ users',
-      'Optimized MongoDB aggregation pipelines — 40% faster queries',
-      'Shipped 3 React feature modules in Agile sprints',
-      'Participated in daily standups, code reviews & sprint planning',
+      'Designed and implemented RESTful APIs using Express.js for CRUD operations and data management',
+      'Optimized MongoDB queries using indexing and aggregation, reducing response latency',
+      'Built modular and reusable React components, improving frontend scalability and maintainability',
+      'Followed Agile methodology with sprint planning, code reviews, and version control using Git',
     ],
-    tech: ['React', 'Node.js', 'MongoDB', 'AWS', 'Docker'],
+    tech: ['React', 'Node.js', 'MongoDB', 'Redis', 'Docker', 'Git', 'GitHub', 'Postman', 'Express'],
     accent: '#00e5a0',
   },
+  // {
+  //   id: 1, date: 'Summer 2023', badge: null,
+  //   role: 'Web Development Intern',
+  //   company: 'AnotherCo', location: 'Remote', type: 'Work',
+  //   desc: 'Shipped 3 client-facing features end-to-end. Integrated Razorpay and Twilio SMS APIs, wrote Jest tests with 85% code coverage.',
+  //   points: [
+  //     'Integrated Razorpay payment gateway',
+  //     'Built Twilio SMS notification system',
+  //     'Wrote Jest unit tests — 85% coverage',
+  //     'Deployed features to production with zero downtime',
+  //   ],
+  //   tech: ['Express', 'MySQL', 'React', 'Jest', 'Postman'],
+  //   accent: '#7c6fff',
+  // },
   {
-    id: 1, date: 'Summer 2023', badge: null,
-    role: 'Web Development Intern',
-    company: 'AnotherCo', location: 'Remote', type: 'Work',
-    desc: 'Shipped 3 client-facing features end-to-end. Integrated Razorpay and Twilio SMS APIs, wrote Jest tests with 85% code coverage.',
-    points: [
-      'Integrated Razorpay payment gateway',
-      'Built Twilio SMS notification system',
-      'Wrote Jest unit tests — 85% coverage',
-      'Deployed features to production with zero downtime',
-    ],
-    tech: ['Express', 'MySQL', 'React', 'Jest', 'Postman'],
-    accent: '#7c6fff',
-  },
-  {
-    id: 2, date: 'Oct 2023', badge: '🏆 1st Place',
+    id: 2, date: 'JAN 2026', badge: '🏆 1st Place',
     role: 'Hackathon Champion',
-    company: 'CodeFest NIT Nagpur', location: '36-hr Sprint', type: 'Achievement',
-    desc: 'Built a real-time disaster management dashboard with live maps, SMS alerts, and resource allocation — won first place among 80+ teams.',
+    company: 'CodeRush', type: 'Achievement',
+    desc: 'Built a full-stack placement and career guidance platform (UniCareer) with job listings, student dashboards, and application tracking, streamlining the college recruitment workflow.',
     points: [
-      'Built real-time map with Google Maps API',
-      'SMS alert system via Twilio',
-      'Resource allocation algorithm with priority queues',
-      'Won 1st place out of 80+ competing teams',
+      'Developed UniCareer, a MERN-based placement platform for streamlining college recruitment processes',
+      'Implemented RESTful APIs using Node.js & Express for student, recruiter, and job data management',
+      'Built responsive React dashboards for job listings, application tracking, and user interaction',
+      'Designed MongoDB schemas to handle student profiles, job postings, and application workflows efficiently',
     ],
-    tech: ['Next.js', 'Socket.io', 'Twilio', 'Maps API', 'MongoDB'],
+    tech: ['Next.js', 'Socket.io', 'API', 'MongoDB'],
     accent: '#ffd93d',
   },
   {
-    id: 3, date: '2021 — 2025', badge: null,
-    role: 'B.E. Computer Science',
-    company: 'Your University', location: 'Nagpur', type: 'Education',
-    desc: 'CGPA: 8.7/10. Led the Coding Club, participated in inter-university hackathons. Core CS fundamentals and practical project experience.',
+    id: 3, date: '2023 — 2026', badge: null,
+    role: 'B.Tech. Computer Technology',
+    company: 'RTMNU', location: 'Nagpur', type: 'Education',
+    desc: 'CGPA: 7.14 / 10. Led the Coding Club, participated in inter-university hackathons. Core CS fundamentals and practical project experience.',
     points: [
-      'CGPA: 8.7 / 10.0',
-      'Led College Coding Club (80+ members)',
-      'Coursework: DSA, DBMS, OS, CN, Cloud Computing',
-      'Final Year Project: MERN Stack SaaS Platform',
+      'CGPA: 7.14 / 10.0',
+      'Active participant in college coding activities and technical learning initiatives',
+      'Strong understanding of MERN stack, Java, Operating Systems andComputer Networks,',
+      'Developed a MERN stack E-learning platform as a major project, implementing user authentication, course management, and interactive quizzes',
     ],
-    tech: ['Java', 'Python', 'C++', 'SQL', 'Data Structures'],
+    tech: ['Java', 'Python', 'C++', 'SQL', 'Data Structures', 'MERN Stack', 'socket.io', 'Git', 'GitHub', 'Postman', 'docker','Kubernetes','WebSocket'],
     accent: '#60d0ff',
   },
 ];
@@ -83,7 +83,7 @@ export default function Experience() {
     <section id="experience" style={{ position: 'relative', zIndex: 1 }}>
       <div className="sw" ref={ref}>
         <div className="sh">
-          <span className="sn">03 /</span>
+          {/* <span className="sn">03 /</span> */}
           <h2 className="st">Experience</h2>
           <div className="sl" />
         </div>

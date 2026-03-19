@@ -35,7 +35,7 @@ mern-portfolio/
 cd server
 npm install
 cp .env.example .env
-# Edit .env with your MongoDB URI + SMTP settings
+![alt text](image.png)# Edit .env with your MongoDB URI + SMTP settings
 npm run dev
 ```
 

@@ -4,8 +4,8 @@ import axios from 'axios';
 const API = import.meta.env.VITE_API_URL || '/api';
 
 const SOCIALS = [
-  { label: 'GitHub',   handle: 'https://github.com/NikitaMandle',           href: '#', color: '#00e5a0', icon: 'GH' },
-  { label: 'LinkedIn', handle: 'https://www.linkedin.com/in/nikita-mandle', href: '#', color: '#7c6fff', icon: 'LI' },
+  { label: 'GitHub',   handle: 'https://github.com/NikitaMandle',           href: 'https://github.com/NikitaMandle',           color: '#00e5a0', icon: 'GH' },
+  { label: 'LinkedIn', handle: 'https://www.linkedin.com/in/nikita-mandle', href: 'https://www.linkedin.com/in/nikita-mandle', color: '#7c6fff', icon: 'LI' },
   // { label: 'LeetCode', handle: 'nikitamandle',            href: '#', color: '#ffd93d', icon: 'LC' },
 ];
 
@@ -213,7 +213,7 @@ export default function Contact({ addToast }) {
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {SOCIALS.map(s => (
-                <a key={s.label} href={s.href}
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{
                     display: 'flex', alignItems: 'center', gap: '12px',
                     padding: '12px 14px',
