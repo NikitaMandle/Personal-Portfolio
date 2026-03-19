@@ -1,36 +1,58 @@
 import { useEffect, useRef, useState } from 'react';
 
-const SKILLS_BARS = [
-  { name: 'React / Next.js', pct: 88, color: '#00e5a0' },
-  { name: 'Node.js / Express', pct: 85, color: '#00e5a0' },
-  { name: 'MongoDB / Mongoose', pct: 82, color: '#7c6fff' },
-  { name: 'TypeScript', pct: 74, color: '#7c6fff' },
-  { name: 'Docker / CI-CD', pct: 65, color: '#ff9090' },
-  { name: 'AWS / Cloud', pct: 58, color: '#ff9090' },
+const BARS = [
+  { name: 'React / Next.js',    pct: 88, color: '#00e5a0', cat: 'Frontend' },
+  { name: 'Node.js / Express',  pct: 85, color: '#00e5a0', cat: 'Backend'  },
+  { name: 'MongoDB / Mongoose', pct: 82, color: '#7c6fff', cat: 'Database' },
+  { name: 'TypeScript',         pct: 74, color: '#7c6fff', cat: 'Frontend' },
+  { name: 'Docker / CI-CD',     pct: 65, color: '#ff9090', cat: 'DevOps'   },
+  { name: 'AWS / Cloud',        pct: 58, color: '#ff9090', cat: 'DevOps'   },
+  { name: 'PostgreSQL',         pct: 72, color: '#60d0ff', cat: 'Database' },
+  { name: 'Java / Spring Boot', pct: 68, color: '#ffd93d', cat: 'Backend'  },
 ];
 
 const CATS = [
-  { title: 'Frontend', tags: [['React.js','g'],['Next.js','g'],['TypeScript',''],['Tailwind',''],['HTML5',''],['CSS3','']] },
-  { title: 'Backend', tags: [['Node.js','g'],['Express','g'],['REST APIs',''],['Java',''],['Spring Boot',''],['Python','']] },
-  { title: 'Database', tags: [['MongoDB','g'],['PostgreSQL','g'],['MySQL',''],['Redis',''],['Firebase','']] },
-  { title: 'DevOps & Tools', tags: [['Git','r'],['Docker','r'],['AWS',''],['CI/CD',''],['Linux',''],['Postman','']] },
-  { title: 'Currently Learning', tags: [['Kubernetes','g'],['GraphQL','g'],['Microservices',''],['System Design','']] },
-  { title: 'Passionate About', tags: [['Open Source','r'],['Problem Solving','r'],['DSA',''],['Clean Code','']] },
+  { key: 'Frontend',  color: '#00e5a0', items: ['React.js','Next.js','TypeScript','Tailwind','HTML5','CSS3','Framer Motion'] },
+  { key: 'Backend',   color: '#7c6fff', items: ['Node.js','Express','REST APIs','Java','Spring Boot','Python','Socket.io'] },
+  { key: 'Database',  color: '#60d0ff', items: ['MongoDB','PostgreSQL','MySQL','Redis','Firebase','Prisma'] },
+  { key: 'DevOps',    color: '#ffd93d', items: ['Git','Docker','AWS','CI/CD','Linux','Nginx','Postman'] },
+  { key: 'Learning',  color: '#ff9090', items: ['Kubernetes','GraphQL','Microservices','System Design','Kafka'] },
+  { key: 'Interests', color: '#ff6bcb', items: ['Open Source','DSA','Clean Code','Problem Solving','Tech Blogs'] },
 ];
 
-function SkillBar({ name, pct, color, animate }) {
+function Bar({ name, pct, color, animate, delay, active }) {
   return (
-    <div style={{ marginBottom:'18px' }}>
-      <div style={{ display:'flex', justifyContent:'space-between', marginBottom:'8px', alignItems:'center' }}>
-        <span style={{ fontFamily:"'Space Mono',monospace", fontSize:'12px', color:'var(--text2)' }}>{name}</span>
-        <span style={{ fontFamily:"'Space Mono',monospace", fontSize:'11px', color, opacity:0.8 }}>{pct}%</span>
+    <div style={{
+      padding: '14px 20px',
+      borderBottom: '1px solid rgba(255,255,255,0.04)',
+      opacity: active ? 1 : 0.35,
+      transition: 'opacity 0.3s, background 0.2s',
+      background: active ? 'rgba(255,255,255,0.015)' : 'transparent',
+    }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', marginBottom: '8px',
+      }}>
+        <span style={{
+          fontFamily: "'Space Mono',monospace",
+          fontSize: '12px', color: active ? 'var(--text)' : 'var(--muted)',
+          transition: 'color 0.3s',
+        }}>{name}</span>
+        <span style={{
+          fontFamily: "'Space Mono',monospace",
+          fontSize: '11px', color, fontWeight: 700,
+        }}>{pct}%</span>
       </div>
-      <div style={{ height:'3px', background:'var(--bg4)', borderRadius:'2px', overflow:'hidden' }}>
+      <div style={{
+        height: '4px', background: 'rgba(255,255,255,0.05)',
+        borderRadius: '2px', overflow: 'hidden', position: 'relative',
+      }}>
         <div style={{
-          height:'100%', borderRadius:'2px', background:color,
-          width: animate ? pct+'%' : '0%',
-          transition: animate ? 'width 1.2s cubic-bezier(0.4,0,0.2,1)' : 'none',
-          boxShadow: animate ? `0 0 8px ${color}60` : 'none',
+          height: '100%', borderRadius: '2px',
+          background: `linear-gradient(90deg,${color}80,${color})`,
+          width: animate ? pct + '%' : '0%',
+          transition: `width 1.2s cubic-bezier(0.4,0,0.2,1) ${delay}s`,
+          boxShadow: `0 0 6px ${color}60`,
         }} />
       </div>
     </div>
@@ -40,53 +62,206 @@ function SkillBar({ name, pct, color, animate }) {
 export default function Skills() {
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
+  const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVis(true); }, { threshold: 0.1 });
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setVis(true); },
+      { threshold: 0.08 }
+    );
     if (ref.current) obs.observe(ref.current);
     return () => obs.disconnect();
   }, []);
 
+  const tabs = ['All', ...CATS.map(c => c.key)];
+  const activeCat = CATS.find(c => c.key === activeTab);
+
   return (
-    <section id="skills" style={{ position:'relative', zIndex:1 }}>
-      <div className="sw" ref={ref}>
+    <section id="skills" style={{ position: 'relative', zIndex: 1 }} ref={ref}>
+      <div className="sw">
         <div className="sh">
           <span className="sn">01 /</span>
           <h2 className="st">Skills</h2>
           <div className="sl" />
         </div>
 
-        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'72px', alignItems:'start' }}>
-          {/* Skill bars */}
-          <div>
-            <div style={{ fontFamily:"'Space Mono',monospace", fontSize:'11px', color:'var(--accent)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'30px' }}>
-              // Proficiency
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+
+          {/* ── LEFT: Skill bars panel ── */}
+          <div style={{
+            background: 'var(--bg3)',
+            border: '1px solid rgba(255,255,255,0.07)',
+            overflow: 'hidden',
+            opacity: vis ? 1 : 0,
+            transform: vis ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.6s ease',
+          }}>
+            {/* Panel header */}
+            <div style={{
+              padding: '16px 20px',
+              borderBottom: '1px solid rgba(255,255,255,0.07)',
+              background: 'var(--bg4)',
+              display: 'flex', alignItems: 'center', gap: '10px',
+            }}>
+              <div style={{
+                width: '8px', height: '8px', borderRadius: '50%',
+                background: 'var(--accent)', animation: 'glow 2s infinite',
+              }} />
+              <span style={{
+                fontFamily: "'Space Mono',monospace", fontSize: '11px',
+                color: 'var(--accent)', letterSpacing: '2px', textTransform: 'uppercase',
+              }}>Proficiency Index</span>
             </div>
-            {SKILLS_BARS.map(s => <SkillBar key={s.name} {...s} animate={vis} />)}
+
+            {/* Bars */}
+            <div>
+              {BARS.map((b, i) => (
+                <Bar
+                  key={b.name} {...b} animate={vis} delay={i * 0.1}
+                  active={activeTab === 'All' || activeTab === b.cat}
+                />
+              ))}
+            </div>
+
+            {/* Legend */}
+            <div style={{
+              padding: '14px 20px',
+              borderTop: '1px solid rgba(255,255,255,0.07)',
+              display: 'flex', gap: '20px', flexWrap: 'wrap',
+            }}>
+              {[['#00e5a0','Frontend/Backend'],['#7c6fff','TypeScript/DB'],['#ff9090','DevOps'],['#60d0ff','Database'],['#ffd93d','Java']].map(([c,l]) => (
+                <div key={l} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ width: '8px', height: '8px', borderRadius: '2px', background: c, display: 'block' }} />
+                  <span style={{ fontFamily: "'Space Mono',monospace", fontSize: '9px', color: 'var(--muted)' }}>{l}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Tag grid */}
-          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'14px' }}>
-            {CATS.map((cat, i) => (
-              <div key={cat.title}
-                style={{
-                  background:'var(--bg3)', border:'1px solid var(--border2)',
-                  padding:'22px', transition:'all 0.3s',
-                  opacity: vis ? 1 : 0,
-                  transform: vis ? 'translateY(0)' : 'translateY(20px)',
-                  transitionDelay: `${i*0.06}s`,
-                  position:'relative', overflow:'hidden',
-                }}
-                onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(0,229,160,0.3)'; e.currentTarget.style.transform='translateY(-3px)'; }}
-                onMouseLeave={e => { e.currentTarget.style.borderColor='var(--border2)'; e.currentTarget.style.transform='translateY(0)'; }}
-              >
-                <div style={{ position:'absolute', top:0, left:0, right:0, height:'2px', background:'linear-gradient(90deg,var(--accent),transparent)', transform: vis ? 'scaleX(1)' : 'scaleX(0)', transformOrigin:'left', transition:`transform 0.5s ease ${0.3+i*0.06}s` }} />
-                <div style={{ fontFamily:"'Space Mono',monospace", fontSize:'10px', color:'var(--accent)', letterSpacing:'3px', textTransform:'uppercase', marginBottom:'14px' }}>{cat.title}</div>
-                <div style={{ display:'flex', flexWrap:'wrap', gap:'6px' }}>
-                  {cat.tags.map(([n,c]) => <span key={n} className={`tag ${c}`}>{n}</span>)}
+          {/* ── RIGHT: Stack category explorer ── */}
+          <div style={{
+            display: 'flex', flexDirection: 'column', gap: '0',
+            opacity: vis ? 1 : 0,
+            transform: vis ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.6s ease 0.15s',
+          }}>
+            {/* Tabs */}
+            <div style={{
+              display: 'flex', overflowX: 'auto', gap: '0',
+              borderBottom: '1px solid rgba(255,255,255,0.07)',
+              scrollbarWidth: 'none',
+            }}>
+              {tabs.map(tab => {
+                const cat = CATS.find(c => c.key === tab);
+                const isActive = activeTab === tab;
+                return (
+                  <button key={tab} onClick={() => setActiveTab(tab)}
+                    style={{
+                      fontFamily: "'Space Mono',monospace",
+                      fontSize: '10px', letterSpacing: '1.5px',
+                      textTransform: 'uppercase', padding: '12px 16px',
+                      border: 'none', cursor: 'pointer', whiteSpace: 'nowrap',
+                      background: isActive ? 'var(--bg3)' : 'transparent',
+                      color: isActive ? (cat?.color || 'var(--accent)') : 'var(--muted)',
+                      borderBottom: isActive ? `2px solid ${cat?.color || 'var(--accent)'}` : '2px solid transparent',
+                      transition: 'all 0.2s',
+                    }}>
+                    {tab}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Category content */}
+            <div style={{
+              background: 'var(--bg3)',
+              border: '1px solid rgba(255,255,255,0.07)',
+              borderTop: 'none', flex: 1,
+              padding: '28px 24px',
+            }}>
+              {activeTab === 'All' ? (
+                /* All view: all categories stacked */
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  {CATS.map(cat => (
+                    <div key={cat.key}>
+                      <div style={{
+                        fontFamily: "'Space Mono',monospace", fontSize: '10px',
+                        color: cat.color, letterSpacing: '2px',
+                        textTransform: 'uppercase', marginBottom: '10px',
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                      }}>
+                        <span style={{ width: '12px', height: '1px', background: cat.color, display: 'block' }} />
+                        {cat.key}
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '7px' }}>
+                        {cat.items.map(item => (
+                          <span key={item} style={{
+                            background: `${cat.color}0d`,
+                            border: `1px solid ${cat.color}28`,
+                            color: 'var(--text2)', padding: '4px 11px',
+                            fontFamily: "'Space Mono',monospace", fontSize: '11px',
+                          }}>{item}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </div>
-            ))}
+              ) : (
+                /* Single category view */
+                <div>
+                  <div style={{
+                    display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '24px',
+                  }}>
+                    <h3 style={{
+                      fontSize: '28px', fontWeight: 800,
+                      color: activeCat?.color,
+                    }}>{activeTab}</h3>
+                    <span style={{
+                      fontFamily: "'Space Mono',monospace", fontSize: '11px', color: 'var(--muted)',
+                    }}>{activeCat?.items.length} tools</span>
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                    {activeCat?.items.map((item, i) => (
+                      <span key={item} style={{
+                        background: `${activeCat.color}10`,
+                        border: `1px solid ${activeCat.color}35`,
+                        color: activeCat.color,
+                        padding: '8px 16px',
+                        fontFamily: "'Space Mono',monospace", fontSize: '12px',
+                        animation: `fadeup 0.4s ease ${i * 0.05}s both`,
+                      }}>{item}</span>
+                    ))}
+                  </div>
+
+                  {/* Matching proficiency bars for this category */}
+                  {BARS.filter(b => b.cat === activeTab).length > 0 && (
+                    <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                      <div style={{
+                        fontFamily: "'Space Mono',monospace", fontSize: '10px',
+                        color: 'var(--muted)', letterSpacing: '2px',
+                        textTransform: 'uppercase', marginBottom: '14px',
+                      }}>Proficiency</div>
+                      {BARS.filter(b => b.cat === activeTab).map((b, i) => (
+                        <div key={b.name} style={{ marginBottom: '12px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                            <span style={{ fontFamily: "'Space Mono',monospace", fontSize: '12px', color: 'var(--text2)' }}>{b.name}</span>
+                            <span style={{ fontFamily: "'Space Mono',monospace", fontSize: '11px', color: activeCat.color, fontWeight: 700 }}>{b.pct}%</span>
+                          </div>
+                          <div style={{ height: '4px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
+                            <div style={{
+                              height: '100%', borderRadius: '2px',
+                              background: `linear-gradient(90deg,${activeCat.color}80,${activeCat.color})`,
+                              width: vis ? b.pct + '%' : '0%',
+                              transition: `width 1s ease ${i * 0.15}s`,
+                            }} />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

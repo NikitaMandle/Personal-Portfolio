@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Contact = require('../models/Contact');
+const { sendContactNotification } = require('../services/notification');
 
 // POST /api/contact — Save a new message
 router.post(
@@ -20,6 +21,14 @@ router.post(
     try {
       const { name, email, subject, message } = req.body;
       const contact = await Contact.create({ name, email, subject, message });
+
+      // Keep contact saving reliable even if email provider is temporarily down.
+      try {
+        await sendContactNotification(contact);
+      } catch (notifyErr) {
+        console.error('Contact notification error:', notifyErr.message);
+      }
+
       res.status(201).json({
         success: true,
         message: 'Message received! I will get back to you soon.',

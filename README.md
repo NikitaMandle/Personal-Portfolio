@@ -35,7 +35,7 @@ mern-portfolio/
 cd server
 npm install
 cp .env.example .env
-# Edit .env with your MongoDB URI
+# Edit .env with your MongoDB URI + SMTP settings
 npm run dev
 ```
 
@@ -71,6 +71,23 @@ npm run dev
 | POST   | /api/contact | Save a contact message   |
 | GET    | /api/contact | Get all messages (admin) |
 | GET    | /api/health  | Health check             |
+
+## Contact Notifications (Email)
+
+When someone submits the contact form:
+
+1. Message is saved to MongoDB
+2. Notification email is sent to `NOTIFY_EMAIL` via SMTP
+
+Configure these in `server/.env`:
+
+- `SMTP_HOST` (example: `smtp.gmail.com`)
+- `SMTP_PORT` (`465` for SSL, `587` for TLS)
+- `SMTP_SECURE` (`true` with port 465, otherwise `false`)
+- `SMTP_USER`
+- `SMTP_PASS` (for Gmail use App Password, not normal password)
+- `EMAIL_FROM`
+- `NOTIFY_EMAIL`
 
 ---
 

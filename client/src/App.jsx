@@ -11,8 +11,9 @@ import Toast from './components/Toast';
 export default function App() {
   const cursorRef = useRef(null);
   const ringRef = useRef(null);
-  const mx = useRef(0), my = useRef(0);
-  const rx = useRef(0), ry = useRef(0);
+  const mousePos = useRef({ x: -100, y: -100 });
+  const ringPos = useRef({ x: -100, y: -100 });
+  const rafRef = useRef(null);
   const [scrollPct, setScrollPct] = useState(0);
   const [toasts, setToasts] = useState([]);
 
@@ -24,41 +25,53 @@ export default function App() {
 
   useEffect(() => {
     const onMove = (e) => {
-      mx.current = e.clientX; my.current = e.clientY;
+      mousePos.current = { x: e.clientX, y: e.clientY };
       if (cursorRef.current) {
         cursorRef.current.style.left = e.clientX + 'px';
         cursorRef.current.style.top = e.clientY + 'px';
       }
     };
+
     const onScroll = () => {
       const el = document.documentElement;
-      setScrollPct((el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100);
+      const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+      setScrollPct(pct || 0);
     };
+
+    // Smooth ring follow
+    const animateRing = () => {
+      ringPos.current.x += (mousePos.current.x - ringPos.current.x) * 0.1;
+      ringPos.current.y += (mousePos.current.y - ringPos.current.y) * 0.1;
+      if (ringRef.current) {
+        ringRef.current.style.left = ringPos.current.x + 'px';
+        ringRef.current.style.top = ringPos.current.y + 'px';
+      }
+      rafRef.current = requestAnimationFrame(animateRing);
+    };
+
     document.addEventListener('mousemove', onMove);
     window.addEventListener('scroll', onScroll);
+    rafRef.current = requestAnimationFrame(animateRing);
 
-    let raf;
-    const loop = () => {
-      rx.current += (mx.current - rx.current) * 0.1;
-      ry.current += (my.current - ry.current) * 0.1;
-      if (ringRef.current) {
-        ringRef.current.style.left = rx.current + 'px';
-        ringRef.current.style.top = ry.current + 'px';
-      }
-      raf = requestAnimationFrame(loop);
+    // Cursor grow on hover
+    const addHov = () => {
+      cursorRef.current?.classList.add('hov');
+      ringRef.current?.classList.add('hov');
     };
-    raf = requestAnimationFrame(loop);
+    const remHov = () => {
+      cursorRef.current?.classList.remove('hov');
+      ringRef.current?.classList.remove('hov');
+    };
 
-    // Hover effect on interactive elements
-    const els = document.querySelectorAll('a,button,.hov-target');
-    const onEnter = () => { cursorRef.current?.classList.add('hov'); ringRef.current?.classList.add('hov'); };
-    const onLeave = () => { cursorRef.current?.classList.remove('hov'); ringRef.current?.classList.remove('hov'); };
-    els.forEach(el => { el.addEventListener('mouseenter', onEnter); el.addEventListener('mouseleave', onLeave); });
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest('a,button,[data-hover]')) addHov();
+      else remHov();
+    });
 
     return () => {
       document.removeEventListener('mousemove', onMove);
       window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(raf);
+      cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -67,6 +80,7 @@ export default function App() {
       <div className="cursor" ref={cursorRef} />
       <div className="cursor-ring" ref={ringRef} />
       <div className="scroll-bar" style={{ width: scrollPct + '%' }} />
+
       <Navbar />
       <main>
         <Hero />
@@ -76,15 +90,17 @@ export default function App() {
         <Experience />
         <Contact addToast={addToast} />
       </main>
+
       <footer style={{
         padding: '28px 72px', borderTop: '1px solid var(--border2)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         flexWrap: 'wrap', gap: '12px', position: 'relative', zIndex: 1,
       }}>
-        {['© 2025 — Nikita Mandle', 'Full Stack Developer · Nagpur, IN', 'Built on MERN ⚡'].map(t => (
+        {['© 2025 — Nikita Mandle', 'Full Stack Developer · Nagpur, IN', 'MERN Stack ⚡'].map(t => (
           <span key={t} style={{ fontFamily:"'Space Mono',monospace", fontSize:'10px', color:'var(--muted)', letterSpacing:'2px', textTransform:'uppercase' }}>{t}</span>
         ))}
       </footer>
+
       <Toast toasts={toasts} />
     </>
   );
