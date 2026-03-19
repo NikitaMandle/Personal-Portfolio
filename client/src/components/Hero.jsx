@@ -120,7 +120,7 @@ export default function Hero() {
               fontFamily: "'Space Mono', monospace", fontSize: '11px',
               color: 'var(--accent)', letterSpacing: '4px', textTransform: 'uppercase',
             }}>
-              Available for opportunities
+              Full Stack Developer - Available for Hire
             </span>
           </div>
 
