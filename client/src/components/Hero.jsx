@@ -23,10 +23,10 @@ const CODE = [
 ];
 
 const STATS = [
-  { num: '12+', label: 'Projects' },
-  { num: '8+', label: 'Technologies' },
+  { num: '8+', label: 'Projects' },
+  { num: '12+', label: 'Technologies' },
   { num: '6mo', label: 'Interning' },
-  { num: '3', label: 'Hackathons' },
+  { num: '1', label: 'Hackathons' },
 ];
 
 export default function Hero() {
@@ -169,7 +169,7 @@ export default function Hero() {
               lineHeight: 1.85, color: 'var(--muted)', marginBottom: '44px',
             }}
           >
-            Final year CS student crafting seamless digital experiences — from
+            Final year CT student crafting seamless digital experiences — from
             MongoDB schemas to React UIs. Currently interning as a Full Stack
             Developer in Nagpur.
           </p>

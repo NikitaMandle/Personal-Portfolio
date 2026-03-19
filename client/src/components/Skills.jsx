@@ -80,7 +80,7 @@ export default function Skills() {
     <section id="skills" style={{ position: 'relative', zIndex: 1 }} ref={ref}>
       <div className="sw">
         <div className="sh">
-          <span className="sn">01 /</span>
+          {/* <span className="sn">01 /</span> */}
           <h2 className="st">Skills</h2>
           <div className="sl" />
         </div>

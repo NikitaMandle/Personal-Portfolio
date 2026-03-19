@@ -4,7 +4,7 @@ import axios from 'axios';
 const API = import.meta.env.VITE_API_URL || '/api';
 
 const SOCIALS = [
-  { label: 'GitHub',   handle: 'https://github.com/NikitaMandle',           href: 'https://github.com/NikitaMandle',           color: '#00e5a0', icon: 'GH' },
+  { label: 'GitHub',   handle: 'https://github.com/NikitaMandle',           href: 'https://github.com/NikitaMandle', color: '#00e5a0', icon: 'GH' },
   { label: 'LinkedIn', handle: 'https://www.linkedin.com/in/nikita-mandle', href: 'https://www.linkedin.com/in/nikita-mandle', color: '#7c6fff', icon: 'LI' },
   // { label: 'LeetCode', handle: 'nikitamandle',            href: '#', color: '#ffd93d', icon: 'LC' },
 ];

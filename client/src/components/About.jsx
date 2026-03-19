@@ -10,10 +10,10 @@ const TRAITS = [
 ];
 
 const COUNTERS = [
-  { end: 12, suffix: '+', label: 'Projects shipped' },
-  { end: 8,  suffix: '.7', label: 'CGPA out of 10' },
+  { end: 8, suffix: '+', label: 'Projects shipped' },
+  { end: 7,  suffix: '.14', label: 'CGPA out of 10' },
   { end: 6,  suffix: 'mo', label: 'Internship exp' },
-  { end: 3,  suffix: '×',  label: 'Hackathon wins' },
+  { end: 1,  suffix: '×',  label: 'Hackathon wins' },
 ];
 
 function Counter({ end, suffix, label, run }) {
@@ -70,7 +70,7 @@ export default function About() {
     <section id="about" style={{ background: 'var(--bg2)', position: 'relative', zIndex: 1 }}>
       <div className="sw" ref={ref}>
         <div className="sh">
-          <span className="sn">00 /</span>
+          {/* <span className="sn">00 /</span> */}
           <h2 className="st">About</h2>
           <div className="sl" />
         </div>
@@ -87,16 +87,25 @@ export default function About() {
             transform: vis ? 'translateY(0)' : 'translateY(30px)',
             transition: 'all 0.6s ease',
           }}>
-            {/* Avatar placeholder */}
+            {/* Avatar */}
             <div style={{
               width: '100%', aspectRatio: '1',
               background: 'var(--bg3)',
               border: '1px solid rgba(255,255,255,0.08)',
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
               position: 'relative', overflow: 'hidden',
               marginBottom: '16px',
             }}>
+              <img
+                src="/nikita.jpeg"
+                alt="Nikita Mandle"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  display: 'block',
+                }}
+              />
               {/* Grid overlay */}
               <div style={{
                 position: 'absolute', inset: 0,
@@ -117,19 +126,6 @@ export default function About() {
                   [pos.bl]: '2px solid var(--accent)',
                 }} />
               ))}
-              {/* Initials */}
-              <div style={{
-                fontFamily: "'Syne',sans-serif",
-                fontSize: '64px', fontWeight: 800,
-                color: 'rgba(0,229,160,0.15)',
-                letterSpacing: '-4px', zIndex: 1,
-                lineHeight: 1,
-              }}>NM</div>
-              <div style={{
-                fontFamily: "'Space Mono',monospace",
-                fontSize: '10px', color: 'var(--muted)',
-                letterSpacing: '3px', marginTop: '8px', zIndex: 1,
-              }}>PHOTO COMING SOON</div>
             </div>
 
             {/* Name + role */}
@@ -178,7 +174,7 @@ export default function About() {
               display: 'flex', alignItems: 'center', gap: '10px',
             }}>
               <span style={{ display: 'block', width: '24px', height: '1px', background: 'var(--accent)' }} />
-              // Who I am
+              Who I am
             </div>
 
             <h3 style={{
@@ -193,8 +189,8 @@ export default function About() {
               fontSize: '15px', color: 'var(--text2)',
               lineHeight: 1.9, marginBottom: '14px',
             }}>
-              I'm a final-year B.E. Computer Science student and Full Stack Developer
-              Intern from Nagpur, Maharashtra. I love building things end-to-end — from
+              I'm a final-year B.Tech. Computer Technology student and Full Stack Developer
+              Intern from Nagpur, Maharashtra. I love building things end-to-end from
               designing MongoDB schemas to crafting pixel-perfect React UIs.
             </p>
             <p style={{
@@ -215,7 +211,7 @@ export default function About() {
 
             {/* Tags */}
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {['B.E. CS — 8.7 CGPA', 'Nagpur, Maharashtra', 'Jun 2025 Graduate', 'Open to Relocate'].map(t => (
+              {['B.Tech. CT — 7.14 CGPA', 'Nagpur, Maharashtra', 'AUG 2026 Graduate', 'Open to Relocate'].map(t => (
                 <span key={t} style={{
                   fontFamily: "'Space Mono',monospace", fontSize: '11px',
                   color: 'var(--accent)', border: '1px solid var(--border)',

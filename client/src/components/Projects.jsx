@@ -2,57 +2,57 @@ import { useState, useRef, useEffect } from 'react';
 
 const PROJECTS = [
   {
-    id: '01', type: 'Full Stack', name: 'E-Commerce Platform', featured: true,
-    desc: 'Scalable shopping platform with real-time inventory, cart management, Stripe payments, and an admin analytics dashboard. Handles 1000+ concurrent users with Redis caching.',
+    id: '01', type: 'Full Stack', name: 'E-Learning Platform', featured: true,
+    desc: 'Built a full-stack e-learning platform with course management, user authentication, progress tracking, and interactive dashboards for students and instructors.',
     long: 'Built a complete e-commerce solution from scratch — React storefront, Node.js REST API, MongoDB for product/order data, and Redis for session caching. Stripe integration for payments. Admin dashboard with Chart.js analytics.',
     stack: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Redis', 'Express'],
-    demo: '#', github: '#', accent: '#00e5a0',
+    github: 'https://github.com/NikitaMandle/e-learning-platform', accent: '#00e5a0',
     tags: ['fullstack'],
-    metrics: ['1k+ users', '40ms avg response', '99.9% uptime'],
+    metrics: [],
   },
   {
-    id: '02', type: 'SaaS Tool', name: 'DevCollab Board', featured: false,
-    desc: 'Real-time collaborative project management with WebSocket live updates, Kanban boards, and team analytics. Built for developer teams.',
+    id: '02', type: 'Full Stack', name: 'Unicarrer', featured: false,
+    desc: 'Built a full-stack placement platform (UniCareer) with student profiles, job listings, application tracking, and role-based dashboards for students and administrators.',
     stack: ['Next.js', 'Socket.io', 'PostgreSQL', 'Docker'],
-    demo: '#', github: '#', accent: '#7c6fff',
+    demo: '#', github: 'https://github.com/NikitaMandle/unicareer-coderush', accent: '#7c6fff',
     tags: ['fullstack', 'backend'],
     metrics: ['Real-time', 'Multi-user', 'Docker ready'],
   },
   {
-    id: '03', type: 'Backend API', name: 'Auth Microservice', featured: false,
-    desc: 'Production-ready JWT auth with OAuth2, rate limiting, email verification, and role-based access. Fully documented.',
+    id: '03', type: 'Full Stack', name: '3D glove', featured: false,
+    desc: 'Developed a 3D glove system that tracks hand gestures using sensors and visualizes movements in a real-time interactive interface.',
     stack: ['Express', 'JWT', 'Redis', 'AWS SES'],
-    demo: '#', github: '#', accent: '#ff9090',
+    demo: '#', github: 'https://github.com/meshramharsh19/3d-glove', accent: '#ff9090',
     tags: ['backend'],
     metrics: ['OAuth2', 'Rate limited', 'AWS SES'],
   },
   {
-    id: '04', type: 'Mobile App', name: 'Campus Connect', featured: false,
-    desc: 'Student networking app with event listings, club discovery, mess menu, and alumni mentorship. Used by 500+ students.',
+    id: '04', type: 'Full Stack', name: 'Portfolio', featured: false,
+    desc: 'Built a responsive personal portfolio website using React.js to showcase projects, skills, and experience with a clean and modern UI.',
     stack: ['React Native', 'Firebase', 'Python', 'ML'],
-    demo: '#', github: '#', accent: '#ffd93d',
+    demo: '#', github: 'https://github.com/NikitaMandle/Personal-Portfolio', accent: '#ffd93d',
     tags: ['fullstack', 'mobile'],
     metrics: ['500+ users', 'ML powered', 'Firebase RT'],
   },
   {
-    id: '05', type: 'Frontend', name: 'Dev Portfolio v2', featured: false,
-    desc: 'This portfolio! MERN stack, animated UI, MongoDB contact form. Deployed on Vercel + Render.',
+    id: '05', type: 'Full Stack', name: 'DigitalTwin Survey', featured: false,
+    desc: 'Built a digital twin survey system to visualize and manage real-world asset data using geospatial mapping and structured datasets.',
     stack: ['React', 'Vite', 'Node.js', 'MongoDB'],
-    demo: '#', github: '#', accent: '#60d0ff',
+    demo: '#', github: 'https://github.com/meshramharsh19/DigiTwin-survey', accent: '#60d0ff',
     tags: ['frontend', 'fullstack'],
     metrics: ['MERN', 'Animated', 'Open source'],
   },
-  {
-    id: '06', type: 'CLI Tool', name: 'CLI Task Manager', featured: false,
-    desc: 'Terminal task manager with MongoDB persistence, priority queues, reminders, and team workspaces.',
-    stack: ['Node.js', 'MongoDB', 'Commander.js', 'Chalk'],
-    demo: '#', github: '#', accent: '#ff6bcb',
-    tags: ['backend'],
-    metrics: ['MongoDB', 'Terminal UI', 'Team sync'],
-  },
+  // {
+  //   id: '06', type: 'CLI Tool', name: 'CLI Task Manager', featured: false,
+  //   desc: 'Terminal task manager with MongoDB persistence, priority queues, reminders, and team workspaces.',
+  //   stack: ['Node.js', 'MongoDB', 'Commander.js', 'Chalk'],
+  //   demo: '#', github: '#', accent: '#ff6bcb',
+  //   tags: ['backend'],
+  //   metrics: ['MongoDB', 'Terminal UI', 'Team sync'],
+  // },
 ];
 
-const FILTERS = ['All', 'Full Stack', 'Backend', 'Frontend'];
+const FILTERS = ['All' ]; //'Full Stack','Backend', 'Frontend'
 
 function FeaturedCard({ p, vis }) {
   const [hov, setHov] = useState(false);
@@ -123,7 +123,7 @@ function FeaturedCard({ p, vis }) {
 
         {/* Links */}
         <div style={{ display: 'flex', gap: '16px' }}>
-          {[['Live Demo', p.demo], ['GitHub', p.github]].map(([label, href]) => (
+          {[ ['GitHub', p.github]].map(([label, href]) => (
             <a key={label} href={href}
               style={{
                 fontFamily: "'Space Mono',monospace", fontSize: '11px',
@@ -165,16 +165,6 @@ function FeaturedCard({ p, vis }) {
         {/* Corner brackets */}
         <div style={{ position: 'absolute', top: 20, left: 20, width: 24, height: 24, borderTop: `2px solid ${p.accent}60`, borderLeft: `2px solid ${p.accent}60` }} />
         <div style={{ position: 'absolute', bottom: 20, right: 20, width: 24, height: 24, borderBottom: `2px solid ${p.accent}60`, borderRight: `2px solid ${p.accent}60` }} />
-        {/* Status */}
-        <div style={{
-          position: 'absolute', bottom: 20, left: 20,
-          fontFamily: "'Space Mono',monospace", fontSize: '9px',
-          color: p.accent, letterSpacing: '2px',
-          display: 'flex', alignItems: 'center', gap: '6px',
-        }}>
-          <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: p.accent, animation: 'glow 2s infinite', display: 'block' }} />
-          LIVE PROJECT
-        </div>
       </div>
     </div>
   );
@@ -287,7 +277,7 @@ export default function Projects({ addToast }) {
     <section id="projects" style={{ background: 'var(--bg2)', position: 'relative', zIndex: 1 }}>
       <div className="sw" ref={ref}>
         <div className="sh">
-          <span className="sn">02 /</span>
+          {/* <span className="sn">02 /</span> */}
           <h2 className="st">Projects</h2>
           <div className="sl" />
         </div>
