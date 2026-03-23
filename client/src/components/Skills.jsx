@@ -85,10 +85,10 @@ export default function Skills() {
           <div className="sl" />
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+        <div className="skills-main-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
 
           {/* ── LEFT: Skill bars panel ── */}
-          <div style={{
+          <div className="skills-bars-panel" style={{
             background: 'var(--bg3)',
             border: '1px solid rgba(255,255,255,0.07)',
             overflow: 'hidden',
@@ -139,14 +139,14 @@ export default function Skills() {
           </div>
 
           {/* ── RIGHT: Stack category explorer ── */}
-          <div style={{
+          <div className="skills-explorer" style={{
             display: 'flex', flexDirection: 'column', gap: '0',
             opacity: vis ? 1 : 0,
             transform: vis ? 'translateY(0)' : 'translateY(30px)',
             transition: 'all 0.6s ease 0.15s',
           }}>
             {/* Tabs */}
-            <div style={{
+            <div className="skills-tabs-row" style={{
               display: 'flex', overflowX: 'auto', gap: '0',
               borderBottom: '1px solid rgba(255,255,255,0.07)',
               scrollbarWidth: 'none',
@@ -173,7 +173,7 @@ export default function Skills() {
             </div>
 
             {/* Category content */}
-            <div style={{
+            <div className="skills-content-panel" style={{
               background: 'var(--bg3)',
               border: '1px solid rgba(255,255,255,0.07)',
               borderTop: 'none', flex: 1,

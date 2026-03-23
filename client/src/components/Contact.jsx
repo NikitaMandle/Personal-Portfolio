@@ -148,13 +148,13 @@ export default function Contact({ addToast }) {
           <div className="sl" />
         </div>
 
-        <div style={{
+        <div className="contact-main-grid" style={{
           display: 'grid', gridTemplateColumns: '1fr 1.6fr',
           gap: '48px', alignItems: 'start',
         }}>
 
           {/* ── LEFT PANEL ── */}
-          <div style={{
+          <div className="contact-left-panel" style={{
             opacity: vis ? 1 : 0,
             transform: vis ? 'translateY(0)' : 'translateY(30px)',
             transition: 'all 0.6s ease',
@@ -211,7 +211,7 @@ export default function Contact({ addToast }) {
               marginBottom: '16px',
             }}>Socials</div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div className="contact-social-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               {SOCIALS.map(s => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                   style={{
@@ -243,7 +243,7 @@ export default function Contact({ addToast }) {
                   }}>{s.icon}</div>
                   <div>
                     <div style={{ fontSize: '13px', fontWeight: 700, color: s.color }}>{s.label}</div>
-                    <div style={{
+                    <div className="contact-social-handle" style={{
                       fontFamily: "'Space Mono', monospace",
                       fontSize: '9px', color: 'var(--muted)',
                       letterSpacing: '0.5px', marginTop: '2px',
@@ -256,13 +256,13 @@ export default function Contact({ addToast }) {
           </div>
 
           {/* ── RIGHT PANEL: Terminal-style form ── */}
-          <div style={{
+          <div className="contact-right-panel" style={{
             opacity: vis ? 1 : 0,
             transform: vis ? 'translateY(0)' : 'translateY(30px)',
             transition: 'all 0.6s ease 0.15s',
           }}>
             {/* Terminal header */}
-            <div style={{
+            <div className="contact-terminal-head" style={{
               background: 'var(--bg4)',
               border: '1px solid rgba(255,255,255,0.07)',
               borderBottom: 'none',
@@ -297,13 +297,13 @@ export default function Contact({ addToast }) {
             </div>
 
             {/* Form body */}
-            <form onSubmit={onSubmit} style={{
+            <form onSubmit={onSubmit} className="contact-form-body" style={{
               background: 'var(--bg3)',
               border: '1px solid rgba(255,255,255,0.07)',
               padding: '32px',
               display: 'flex', flexDirection: 'column', gap: '20px',
             }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div className="contact-input-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
                 <Input label="Name"  name="name"  value={form.name}  onChange={onChange} error={errors.name} />
                 <Input label="Email" name="email" value={form.email} onChange={onChange} error={errors.email} type="email" />
               </div>

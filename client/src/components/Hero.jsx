@@ -102,7 +102,7 @@ export default function Hero() {
         }}
       >
         {/* ── LEFT COLUMN ── */}
-        <div>
+        <div className="hero-left-col">
           {/* Available badge */}
           <div
             className="fu"
@@ -126,7 +126,7 @@ export default function Hero() {
 
           {/* Name */}
           <h1
-            className="fu"
+            className="hero-title fu"
             style={{
               animationDelay: '0.25s',
               fontSize: 'clamp(56px, 8vw, 104px)',
@@ -136,14 +136,14 @@ export default function Hero() {
           >
             NIKITA
             <br />
-            <span style={{ WebkitTextStroke: '1.5px var(--accent)', color: 'transparent' }}>
+            <span className="hero-outline-name" style={{ WebkitTextStroke: '1.5px var(--accent)', color: 'transparent' }}>
               MANDLE
             </span>
           </h1>
 
           {/* Typing line */}
           <p
-            className="fu"
+            className="hero-typing fu"
             style={{
               animationDelay: '0.4s',
               fontFamily: "'Space Mono', monospace",
@@ -162,7 +162,7 @@ export default function Hero() {
 
           {/* Description */}
           <p
-            className="fu"
+            className="hero-description fu"
             style={{
               animationDelay: '0.5s',
               maxWidth: '460px', fontSize: '16px',
@@ -176,7 +176,7 @@ export default function Hero() {
 
           {/* CTA Buttons */}
           <div
-            className="fu"
+            className="hero-cta-row fu"
             style={{ animationDelay: '0.6s', display: 'flex', gap: '14px', flexWrap: 'wrap' }}
           >
             <Link to="projects" smooth duration={700} offset={-80}>
@@ -189,7 +189,7 @@ export default function Hero() {
 
           {/* Stats row */}
           <div
-            className="fu"
+            className="hero-stats-row fu"
             style={{
               animationDelay: '0.75s',
               display: 'flex', gap: '44px', marginTop: '56px',
@@ -223,7 +223,7 @@ export default function Hero() {
           }}
         >
           {/* Window chrome */}
-          <div style={{
+          <div className="hero-code-window" style={{
             background: 'var(--bg3)',
             border: '1px solid rgba(255,255,255,0.08)',
             borderTop: '2px solid var(--accent2)',
@@ -231,7 +231,7 @@ export default function Hero() {
             overflow: 'hidden',
           }}>
             {/* Title bar */}
-            <div style={{
+            <div className="hero-code-titlebar" style={{
               padding: '12px 18px', background: 'var(--bg4)',
               borderBottom: '1px solid rgba(255,255,255,0.06)',
               display: 'flex', alignItems: 'center', gap: '8px',
@@ -263,7 +263,7 @@ export default function Hero() {
             </div>
 
             {/* Code body */}
-            <div style={{ padding: '24px 20px', fontFamily: "'Space Mono', monospace", fontSize: '13px', lineHeight: 2 }}>
+            <div className="hero-code-body" style={{ padding: '24px 20px', fontFamily: "'Space Mono', monospace", fontSize: '13px', lineHeight: 2 }}>
               {CODE.map((line, i) => (
                 <div
                   key={i}
@@ -294,7 +294,7 @@ export default function Hero() {
             </div>
 
             {/* Status bar */}
-            <div style={{
+            <div className="hero-code-status" style={{
               padding: '8px 20px', background: 'rgba(0,229,160,0.06)',
               borderTop: '1px solid rgba(0,229,160,0.15)',
               display: 'flex', gap: '20px', alignItems: 'center',
@@ -319,7 +319,7 @@ export default function Hero() {
           </div>
 
           {/* Floating badges below the panel */}
-          <div style={{ display: 'flex', gap: '10px', marginTop: '16px', flexWrap: 'wrap' }}>
+          <div className="hero-stack-badges" style={{ display: 'flex', gap: '10px', marginTop: '16px', flexWrap: 'wrap' }}>
             {['MongoDB', 'Express', 'React', 'Node.js'].map((t, i) => (
               <span key={t} style={{
                 fontFamily: "'Space Mono', monospace", fontSize: '10px',
@@ -337,7 +337,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div style={{
+      <div className="hero-scroll-indicator" style={{
         position: 'absolute', bottom: '32px', left: '72px',
         fontFamily: "'Space Mono', monospace", fontSize: '10px',
         color: 'var(--muted)', letterSpacing: '3px', textTransform: 'uppercase',

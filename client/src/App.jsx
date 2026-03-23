@@ -45,7 +45,7 @@ export default function App() {
         <Contact addToast={addToast} />
       </main>
 
-      <footer style={{
+      <footer className="site-footer" style={{
         padding: '28px 72px', borderTop: '1px solid var(--border2)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         flexWrap: 'wrap', gap: '12px', position: 'relative', zIndex: 1,

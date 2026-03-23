@@ -76,7 +76,7 @@ export default function About() {
         </div>
 
         {/* ── TOP ROW ── */}
-        <div style={{
+        <div className="about-top-grid" style={{
           display: 'grid', gridTemplateColumns: '300px 1fr',
           gap: '52px', marginBottom: '52px', alignItems: 'start',
         }}>
@@ -203,7 +203,7 @@ export default function About() {
             </p>
 
             {/* Counters */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '28px' }}>
+            <div className="about-counters-row" style={{ display: 'flex', gap: '12px', marginBottom: '28px' }}>
               {COUNTERS.map(c => (
                 <Counter key={c.label} {...c} run={vis} />
               ))}
@@ -223,7 +223,7 @@ export default function About() {
         </div>
 
         {/* ── BOTTOM: Trait cards ── */}
-        <div style={{
+        <div className="about-traits-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(6, 1fr)',
           gap: '10px',

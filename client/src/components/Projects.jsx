@@ -58,6 +58,7 @@ function FeaturedCard({ p, vis }) {
   const [hov, setHov] = useState(false);
   return (
     <div
+      className="featured-card"
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
@@ -77,7 +78,7 @@ function FeaturedCard({ p, vis }) {
       }} />
 
       {/* Content */}
-      <div style={{ padding: '40px 44px' }}>
+      <div className="featured-content" style={{ padding: '40px 44px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
           <span style={{
             fontFamily: "'Space Mono',monospace", fontSize: '10px',
@@ -141,7 +142,7 @@ function FeaturedCard({ p, vis }) {
       </div>
 
       {/* Right: preview mockup */}
-      <div style={{
+      <div className="featured-preview" style={{
         background: 'var(--bg4)',
         borderLeft: '1px solid rgba(255,255,255,0.05)',
         display: 'flex', flexDirection: 'column',
@@ -156,7 +157,7 @@ function FeaturedCard({ p, vis }) {
           backgroundSize: '24px 24px',
         }} />
         {/* Big project number */}
-        <div style={{
+        <div className="featured-number" style={{
           fontSize: '120px', fontWeight: 800, lineHeight: 1,
           color: `${p.accent}12`, letterSpacing: '-8px',
           position: 'relative', zIndex: 1,
@@ -283,7 +284,7 @@ export default function Projects({ addToast }) {
         </div>
 
         {/* Filter bar */}
-        <div style={{
+        <div className="projects-filter-bar" style={{
           display: 'flex', gap: '0', marginBottom: '36px',
           border: '1px solid rgba(255,255,255,0.07)',
           width: 'fit-content',
@@ -308,7 +309,7 @@ export default function Projects({ addToast }) {
         {featured && <FeaturedCard p={featured} vis={vis} />}
 
         {/* Grid */}
-        <div style={{
+        <div className="projects-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
           gap: '16px',

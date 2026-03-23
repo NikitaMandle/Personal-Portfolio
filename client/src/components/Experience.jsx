@@ -89,7 +89,7 @@ export default function Experience() {
         </div>
 
         {/* ── Stepper nav ── */}
-        <div style={{
+        <div className="experience-stepper-row" style={{
           display: 'flex', gap: '0', marginBottom: '32px',
           borderBottom: '1px solid rgba(255,255,255,0.07)',
           opacity: vis ? 1 : 0,
@@ -98,9 +98,9 @@ export default function Experience() {
           overflowX: 'auto', scrollbarWidth: 'none',
         }}>
           {ITEMS.map((it, i) => (
-            <button key={it.id} onClick={() => setActive(i)}
+            <button className="experience-step-btn" key={it.id} onClick={() => setActive(i)}
               style={{
-                background: 'none', border: 'none', cursor: 'pointer',
+                border: 'none', cursor: 'pointer',
                 padding: '16px 28px', textAlign: 'left',
                 borderBottom: active === i ? `2px solid ${it.accent}` : '2px solid transparent',
                 borderRight: i < ITEMS.length - 1 ? '1px solid rgba(255,255,255,0.06)' : 'none',
@@ -108,13 +108,13 @@ export default function Experience() {
                 background: active === i ? `${it.accent}08` : 'transparent',
               }}
             >
-              <div style={{
+              <div className="experience-step-date" style={{
                 fontFamily: "'Space Mono',monospace", fontSize: '9px',
                 color: active === i ? it.accent : 'var(--muted)',
                 letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '4px',
                 transition: 'color 0.2s',
               }}>{it.date}</div>
-              <div style={{
+              <div className="experience-step-role" style={{
                 fontSize: '13px', fontWeight: 700,
                 color: active === i ? 'var(--text)' : 'var(--text2)',
                 transition: 'color 0.2s', whiteSpace: 'nowrap',
@@ -131,6 +131,7 @@ export default function Experience() {
 
         {/* ── Detail panel ── */}
         <div
+          className="experience-detail-grid"
           key={active}
           style={{
             display: 'grid', gridTemplateColumns: '1fr 1fr',
@@ -142,7 +143,7 @@ export default function Experience() {
           }}
         >
           {/* Left: main info */}
-          <div style={{
+          <div className="experience-main-card" style={{
             background: 'var(--bg3)',
             border: `1px solid ${item.accent}30`,
             padding: '36px', position: 'relative', overflow: 'hidden',
@@ -177,7 +178,7 @@ export default function Experience() {
               textTransform: 'uppercase', marginBottom: '10px',
             }}>{item.date}</div>
 
-            <h3 style={{
+            <h3 className="experience-main-title" style={{
               fontSize: '26px', fontWeight: 800, lineHeight: 1.2, marginBottom: '6px',
             }}>{item.role}</h3>
             <div style={{
@@ -202,9 +203,9 @@ export default function Experience() {
           </div>
 
           {/* Right: bullet points + nav */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="experience-side-panel" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {/* Achievements */}
-            <div style={{
+            <div className="experience-highlights-card" style={{
               background: 'var(--bg3)',
               border: '1px solid rgba(255,255,255,0.07)',
               padding: '28px', flex: 1,
@@ -243,7 +244,7 @@ export default function Experience() {
             </div>
 
             {/* Prev / Next nav */}
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div className="experience-nav-row" style={{ display: 'flex', gap: '10px' }}>
               <button
                 onClick={() => setActive(a => Math.max(0, a - 1))}
                 disabled={active === 0}
@@ -262,7 +263,7 @@ export default function Experience() {
               >← Prev</button>
 
               {/* Dot indicators */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0 16px' }}>
+              <div className="experience-dot-nav" style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '0 16px' }}>
                 {ITEMS.map((it, i) => (
                   <button key={i} onClick={() => setActive(i)}
                     style={{
