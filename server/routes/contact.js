@@ -1,18 +1,37 @@
 const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
+const rateLimit = require('express-rate-limit');
 const Contact = require('../models/Contact');
 const { sendContactNotification } = require('../services/notification');
+
+const contactLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 6,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message: 'Too many messages from this network. Please retry after a few minutes.',
+  },
+});
 
 // POST /api/contact — Save a new message
 router.post(
   '/',
+  contactLimiter,
   [
-    body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
-    body('email').isEmail().withMessage('Valid email is required'),
-    body('message').trim().isLength({ min: 10 }).withMessage('Message must be at least 10 characters'),
+    body('name').trim().isLength({ min: 2, max: 80 }).withMessage('Name must be between 2 and 80 characters'),
+    body('email').trim().isEmail().withMessage('Valid email is required'),
+    body('subject').optional({ checkFalsy: true }).trim().isLength({ max: 120 }).withMessage('Subject must be under 120 characters'),
+    body('message').trim().isLength({ min: 10, max: 2500 }).withMessage('Message must be between 10 and 2500 characters'),
+    body('website').optional({ checkFalsy: true }).trim().isLength({ max: 0 }).withMessage('Spam detected'),
   ],
   async (req, res) => {
+    if (req.body.website) {
+      return res.status(200).json({ success: true, message: 'Message received.' });
+    }
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ success: false, errors: errors.array() });

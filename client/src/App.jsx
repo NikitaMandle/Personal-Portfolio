@@ -1,12 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Experience from './components/Experience';
-import Contact from './components/Contact';
 import Toast from './components/Toast';
+import ErrorBoundary from './components/ErrorBoundary';
+import SectionSkeleton from './components/SectionSkeleton';
+
+const Hero = lazy(() => import('./components/Hero'));
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Projects = lazy(() => import('./components/Projects'));
+const Experience = lazy(() => import('./components/Experience'));
+const Contact = lazy(() => import('./components/Contact'));
 
 export default function App() {
   const [scrollPct, setScrollPct] = useState(0);
@@ -32,17 +35,30 @@ export default function App() {
   }, []);
 
   return (
-    <>
+    <ErrorBoundary>
+      <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="scroll-bar" style={{ width: scrollPct + '%' }} />
 
       <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Skills />
-        <Projects addToast={addToast} />
-        <Experience />
-        <Contact addToast={addToast} />
+      <main id="main-content" tabIndex={-1}>
+        <Suspense fallback={<SectionSkeleton label="Loading hero" />}>
+          <Hero />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton label="Loading about" />}>
+          <About />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton label="Loading skills" />}>
+          <Skills />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton label="Loading projects" />}>
+          <Projects addToast={addToast} />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton label="Loading experience" />}>
+          <Experience />
+        </Suspense>
+        <Suspense fallback={<SectionSkeleton label="Loading contact" />}>
+          <Contact addToast={addToast} />
+        </Suspense>
       </main>
 
       <footer className="site-footer" style={{
@@ -56,6 +72,6 @@ export default function App() {
       </footer>
 
       <Toast toasts={toasts} />
-    </>
+    </ErrorBoundary>
   );
 }

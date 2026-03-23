@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import { trackEvent } from '../utils/analytics';
 
 const API = import.meta.env.VITE_API_URL || '/api';
 
@@ -15,7 +16,7 @@ const INFO = [
   { label: 'Status',   value: 'Open to work ',     color: '#00e5a0' },
 ];
 
-function Input({ label, name, value, onChange, error, type = 'text' }) {
+function Input({ label, name, value, onChange, error, type = 'text', required = false, autoComplete = 'off' }) {
   const [focused, setFocused] = useState(false);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -29,6 +30,9 @@ function Input({ label, name, value, onChange, error, type = 'text' }) {
       </label>
       <input
         type={type} name={name} value={value} onChange={onChange}
+        required={required}
+        autoComplete={autoComplete}
+        aria-invalid={Boolean(error)}
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         style={{
           background: 'rgba(255,255,255,0.03)',
@@ -69,6 +73,8 @@ function Textarea({ label, name, value, onChange, error, maxLen = 500 }) {
       </div>
       <textarea
         name={name} value={value} rows={5} maxLength={maxLen}
+        required
+        aria-invalid={Boolean(error)}
         onChange={onChange}
         onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
         placeholder="Tell me about your project, role, or idea..."
@@ -94,9 +100,10 @@ function Textarea({ label, name, value, onChange, error, maxLen = 500 }) {
 }
 
 export default function Contact({ addToast }) {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '', website: '' });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [lastSubmitAt, setLastSubmitAt] = useState(0);
   const ref = useRef(null);
   const [vis, setVis] = useState(false);
 
@@ -115,6 +122,8 @@ export default function Contact({ addToast }) {
       e.name = 'Name must be at least 2 characters';
     if (!/^\S+@\S+\.\S+$/.test(form.email))
       e.email = 'Enter a valid email address';
+    if (form.subject.trim().length > 120)
+      e.subject = 'Subject must be under 120 characters';
     if (!form.message.trim() || form.message.trim().length < 10)
       e.message = 'Message must be at least 10 characters';
     return e;
@@ -127,15 +136,59 @@ export default function Contact({ addToast }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    const now = Date.now();
+    if (now - lastSubmitAt < 8000) {
+      addToast('Please wait a few seconds before sending again.', 'error');
+      return;
+    }
+
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
+
+    if (form.website.trim()) {
+      addToast('Message received. I will get back to you soon.', 'success');
+      return;
+    }
+
     setLoading(true);
+    setLastSubmitAt(now);
+
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      subject: form.subject.trim(),
+      message: form.message.trim(),
+      website: form.website.trim(),
+    };
+
     try {
-      const res = await axios.post(`${API}/contact`, form);
-      addToast(res.data.message || 'Message sent! 🎉', 'success');
-      setForm({ name: '', email: '', subject: '', message: '' });
+      let res;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          res = await axios.post(`${API}/contact`, payload, { timeout: 12000 });
+          break;
+        } catch (err) {
+          const status = err.response?.status;
+          const canRetry = attempt === 0 && (!status || status >= 500);
+          if (!canRetry) throw err;
+        }
+      }
+
+      addToast(res?.data?.message || 'Message sent! I will get back to you soon.', 'success');
+      trackEvent('contact_submit_success', { hasSubject: Boolean(payload.subject) });
+      setForm({ name: '', email: '', subject: '', message: '', website: '' });
+      setErrors({});
     } catch (err) {
-      addToast(err.response?.data?.message || 'Something went wrong.', 'error');
+      const apiErrors = err.response?.data?.errors;
+      if (Array.isArray(apiErrors) && apiErrors.length) {
+        const mapped = {};
+        apiErrors.forEach(({ path, msg }) => {
+          if (path && !mapped[path]) mapped[path] = msg;
+        });
+        setErrors(prev => ({ ...prev, ...mapped }));
+      }
+      trackEvent('contact_submit_failed', { statusCode: err.response?.status || 0 });
+      addToast(err.response?.data?.message || 'Unable to send right now. Please retry in a moment.', 'error');
     } finally { setLoading(false); }
   };
 
@@ -303,12 +356,23 @@ export default function Contact({ addToast }) {
               padding: '32px',
               display: 'flex', flexDirection: 'column', gap: '20px',
             }}>
+              <input
+                type="text"
+                name="website"
+                value={form.website}
+                onChange={onChange}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
+              />
+
               <div className="contact-input-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                <Input label="Name"  name="name"  value={form.name}  onChange={onChange} error={errors.name} />
-                <Input label="Email" name="email" value={form.email} onChange={onChange} error={errors.email} type="email" />
+                <Input label="Name"  name="name"  value={form.name}  onChange={onChange} error={errors.name} required autoComplete="name" />
+                <Input label="Email" name="email" value={form.email} onChange={onChange} error={errors.email} type="email" required autoComplete="email" />
               </div>
 
-              <Input label="Subject" name="subject" value={form.subject} onChange={onChange} />
+              <Input label="Subject" name="subject" value={form.subject} onChange={onChange} error={errors.subject} autoComplete="off" />
 
               <Textarea name="message" value={form.message} onChange={onChange} error={errors.message} />
 

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { trackEvent } from '../utils/analytics';
 
 const PROJECTS = [
   {
@@ -8,7 +9,8 @@ const PROJECTS = [
     stack: ['React', 'Node.js', 'MongoDB', 'Stripe', 'Redis', 'Express'],
     github: 'https://github.com/NikitaMandle/e-learning-platform', accent: '#00e5a0',
     tags: ['fullstack'],
-    metrics: [],
+    metrics: ['JWT auth', 'Role-based admin', 'Payment flow'],
+    outcome: 'Delivered 30+ REST endpoints and reduced key query response times with indexing + Redis cache.',
   },
   {
     id: '02', type: 'Full Stack', name: 'Unicarrer', featured: false,
@@ -17,6 +19,7 @@ const PROJECTS = [
     demo: '#', github: 'https://github.com/NikitaMandle/unicareer-coderush', accent: '#7c6fff',
     tags: ['fullstack', 'backend'],
     metrics: ['Real-time', 'Multi-user', 'Docker ready'],
+    outcome: 'Implemented end-to-end application tracking workflow across student and recruiter dashboards.',
   },
   {
     id: '03', type: 'Full Stack', name: '3D glove', featured: false,
@@ -25,6 +28,7 @@ const PROJECTS = [
     demo: '#', github: 'https://github.com/meshramharsh19/3d-glove', accent: '#ff9090',
     tags: ['backend'],
     metrics: ['OAuth2', 'Rate limited', 'AWS SES'],
+    outcome: 'Built live sensor visualization loop for gesture tracking in real-time interactive scenes.',
   },
   {
     id: '04', type: 'Full Stack', name: 'Portfolio', featured: false,
@@ -33,6 +37,7 @@ const PROJECTS = [
     demo: '#', github: 'https://github.com/NikitaMandle/Personal-Portfolio', accent: '#ffd93d',
     tags: ['fullstack', 'mobile'],
     metrics: ['500+ users', 'ML powered', 'Firebase RT'],
+    outcome: 'Shipped a responsive portfolio with smooth section navigation and backend contact automation.',
   },
   {
     id: '05', type: 'Full Stack', name: 'DigitalTwin Survey', featured: false,
@@ -41,6 +46,7 @@ const PROJECTS = [
     demo: '#', github: 'https://github.com/meshramharsh19/DigiTwin-survey', accent: '#60d0ff',
     tags: ['frontend', 'fullstack'],
     metrics: ['MERN', 'Animated', 'Open source'],
+    outcome: 'Mapped survey-driven asset records into a visual workflow to improve field data traceability.',
   },
   // {
   //   id: '06', type: 'CLI Tool', name: 'CLI Task Manager', featured: false,
@@ -101,6 +107,16 @@ function FeaturedCard({ p, vis }) {
           marginBottom: '24px', maxWidth: '480px',
         }}>{p.long || p.desc}</p>
 
+        <p style={{
+          fontFamily: "'Space Mono',monospace",
+          fontSize: '11px',
+          color: p.accent,
+          lineHeight: 1.6,
+          marginBottom: '20px',
+        }}>
+          Outcome: {p.outcome}
+        </p>
+
         {/* Metrics */}
         <div style={{ display: 'flex', gap: '16px', marginBottom: '28px', flexWrap: 'wrap' }}>
           {p.metrics.map(m => (
@@ -134,6 +150,7 @@ function FeaturedCard({ p, vis }) {
               }}
               onMouseEnter={e => e.currentTarget.style.color = p.accent}
               onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
+              onClick={() => trackEvent('project_link_click', { projectId: p.id, projectName: p.name, target: label.toLowerCase() })}
             >
               {label} ↗
             </a>
@@ -182,9 +199,9 @@ function SmallCard({ p, vis, delay }) {
         border: `1px solid ${hov ? p.accent + '50' : 'rgba(255,255,255,0.07)'}`,
         padding: '28px', position: 'relative', overflow: 'hidden',
         transition: 'all 0.35s ease',
-        transform: vis ? (hov ? 'translateY(-5px)' : 'translateY(0)') : 'translateY(30px)',
+        transform: vis ? (hov ? 'translateY(-3px)' : 'translateY(0)') : 'translateY(30px)',
         opacity: vis ? 1 : 0, transitionDelay: `${delay}s`,
-        boxShadow: hov ? `0 20px 50px rgba(0,0,0,0.4)` : 'none',
+        boxShadow: hov ? `0 14px 34px rgba(0,0,0,0.34)` : 'none',
       }}
     >
       <div style={{
@@ -206,6 +223,15 @@ function SmallCard({ p, vis, delay }) {
       }}>{p.type}</div>
       <h3 style={{ fontSize: '18px', fontWeight: 800, marginBottom: '10px', lineHeight: 1.2 }}>{p.name}</h3>
       <p style={{ fontSize: '13px', color: 'var(--text2)', lineHeight: 1.75, marginBottom: '18px' }}>{p.desc}</p>
+      <p style={{
+        fontFamily: "'Space Mono',monospace",
+        fontSize: '10px',
+        color: p.accent,
+        lineHeight: 1.6,
+        marginBottom: '14px',
+      }}>
+        Outcome: {p.outcome}
+      </p>
 
       {/* Metrics */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
@@ -240,6 +266,7 @@ function SmallCard({ p, vis, delay }) {
             }}
             onMouseEnter={e => e.currentTarget.style.color = p.accent}
             onMouseLeave={e => e.currentTarget.style.color = 'var(--muted)'}
+            onClick={() => trackEvent('project_link_click', { projectId: p.id, projectName: p.name, target: label.toLowerCase() })}
           >
             {label} ↗
           </a>

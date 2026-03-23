@@ -1,7 +1,12 @@
 export default function Toast({ toasts }) {
   if (!toasts.length) return null;
   return (
-    <div style={{ position:'fixed', bottom:'32px', right:'32px', zIndex:1000, display:'flex', flexDirection:'column', gap:'10px' }}>
+    <div
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      style={{ position:'fixed', bottom:'32px', right:'32px', zIndex:1000, display:'flex', flexDirection:'column', gap:'10px' }}
+    >
       {toasts.map(t => (
         <div key={t.id} style={{
           padding: '14px 20px', minWidth: '280px',

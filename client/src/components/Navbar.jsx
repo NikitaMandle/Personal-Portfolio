@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-scroll';
+import { trackEvent } from '../utils/analytics';
 
 const NAV = ['about', 'skills', 'projects', 'experience', 'contact'];
 const RESUME_URL = 'https://drive.google.com/file/d/1rhiDe964KC6SkQvLFZUVh_uwxdNaTuU7/view?usp=drive_link';
@@ -7,6 +8,7 @@ const RESUME_URL = 'https://drive.google.com/file/d/1rhiDe964KC6SkQvLFZUVh_uwxdN
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState('');
+  const [focusItem, setFocusItem] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -20,18 +22,28 @@ export default function Navbar() {
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') closeMenu();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [menuOpen]);
+
   const closeMenu = () => setMenuOpen(false);
 
   return (
     <>
       <nav className="site-nav" style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 140,
         padding: scrolled ? '14px 72px' : '22px 72px',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        background: scrolled ? 'rgba(7,7,14,0.94)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(24px)' : 'none',
+        background: scrolled || menuOpen ? 'rgba(7,7,14,0.72)' : 'rgba(7,7,14,0.28)',
+        backdropFilter: scrolled || menuOpen ? 'blur(18px) saturate(135%)' : 'blur(8px)',
+        WebkitBackdropFilter: scrolled || menuOpen ? 'blur(18px) saturate(135%)' : 'blur(8px)',
         borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : '1px solid transparent',
-        transition: 'all 0.4s ease',
+        transition: 'all 0.35s ease',
       }}>
         {/* Logo */}
         <div className="nav-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -48,7 +60,7 @@ export default function Navbar() {
             fontFamily: "'Space Mono',monospace", fontSize: '13px',
             color: 'var(--text)', letterSpacing: '0.5px',
           }}>
-            NikitaMandle<span style={{ color: 'var(--accent)' }}>.dev</span>
+            NikitaMandle
           </span>
         </div>
 
@@ -59,11 +71,17 @@ export default function Navbar() {
               <Link
                 to={l} smooth duration={700} offset={-80}
                 onSetActive={() => setActive(l)}
+                onClick={() => {
+                  setFocusItem(l);
+                  trackEvent('nav_section_click', { section: l, source: 'desktop' });
+                }}
+                tabIndex={0}
+                aria-current={active === l ? 'page' : undefined}
                 style={{
                   fontFamily: "'Space Mono',monospace", fontSize: '11px',
                   letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer',
                   textDecoration: 'none',
-                  color: active === l ? 'var(--accent)' : 'var(--muted)',
+                  color: active === l || focusItem === l ? 'var(--accent)' : 'var(--muted)',
                   transition: 'color 0.3s',
                   position: 'relative', paddingBottom: '4px',
                 }}
@@ -84,6 +102,7 @@ export default function Navbar() {
               href={RESUME_URL}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Open resume in new tab"
               style={{
                 fontFamily: "'Space Mono',monospace", fontSize: '11px',
                 letterSpacing: '2px', textTransform: 'uppercase',
@@ -100,6 +119,7 @@ export default function Navbar() {
                 e.currentTarget.style.background = 'transparent';
                 e.currentTarget.style.color = 'var(--accent)';
               }}
+              onClick={() => trackEvent('resume_click', { source: 'desktop' })}
             >
               Resume ↗
             </a>
@@ -151,9 +171,10 @@ export default function Navbar() {
           onClick={closeMenu}
           style={{
             position: 'fixed', inset: 0,
-            background: 'rgba(3,3,8,0.65)',
-            backdropFilter: 'blur(2px)',
-            zIndex: 95,
+            background: 'rgba(3,3,8,0.54)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
+            zIndex: 120,
           }}
         />
       )}
@@ -162,15 +183,20 @@ export default function Navbar() {
       <div
         className="mobile-menu-panel"
         style={{
-          position: 'fixed', top: '72px', left: 0, right: 0,
-          zIndex: 99,
-          padding: '16px 22px 20px',
-          background: 'rgba(9,9,18,0.98)',
-          borderBottom: '1px solid rgba(255,255,255,0.06)',
-          transform: menuOpen ? 'translateY(0)' : 'translateY(-120%)',
+          position: 'fixed', top: 0, right: 0, bottom: 0,
+          width: 'min(86vw, 340px)',
+          zIndex: 130,
+          padding: '92px 16px 20px',
+          background: 'rgba(9,9,18,0.68)',
+          backdropFilter: 'blur(20px) saturate(125%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(125%)',
+          borderLeft: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '-20px 0 48px rgba(0,0,0,0.45)',
+          transform: menuOpen ? 'translateX(0)' : 'translateX(108%)',
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? 'auto' : 'none',
-          transition: 'all 0.25s ease',
+          transition: 'transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease',
+          overflowY: 'auto',
         }}
       >
         <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '2px' }}>
@@ -179,16 +205,22 @@ export default function Navbar() {
               <Link
                 to={l} smooth duration={700} offset={-70}
                 onSetActive={() => setActive(l)}
-                onClick={closeMenu}
+                onClick={() => {
+                  setFocusItem(l);
+                  trackEvent('nav_section_click', { section: l, source: 'mobile' });
+                  closeMenu();
+                }}
+                tabIndex={0}
+                aria-current={active === l ? 'page' : undefined}
                 style={{
                   display: 'block',
                   fontFamily: "'Space Mono',monospace", fontSize: '12px',
                   letterSpacing: '2px', textTransform: 'uppercase', cursor: 'pointer',
                   textDecoration: 'none',
-                  color: active === l ? 'var(--accent)' : 'var(--text2)',
+                  color: active === l || focusItem === l ? 'var(--accent)' : 'var(--text2)',
                   padding: '12px 10px',
                   border: '1px solid rgba(255,255,255,0.06)',
-                  background: active === l ? 'rgba(0,229,160,0.08)' : 'transparent',
+                  background: active === l || focusItem === l ? 'rgba(0,229,160,0.08)' : 'transparent',
                 }}
               >
                 {l}
@@ -200,7 +232,11 @@ export default function Navbar() {
               href={RESUME_URL}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={closeMenu}
+              onClick={() => {
+                trackEvent('resume_click', { source: 'mobile' });
+                closeMenu();
+              }}
+              aria-label="Open resume in new tab"
               style={{
                 display: 'block',
                 fontFamily: "'Space Mono',monospace", fontSize: '12px',

@@ -98,6 +98,10 @@ export default function About() {
               <img
                 src="/nikita.jpeg"
                 alt="Nikita Mandle"
+                loading="lazy"
+                decoding="async"
+                width="640"
+                height="640"
                 style={{
                   width: '100%',
                   height: '100%',
@@ -248,7 +252,7 @@ function TraitCard({ icon, label, desc, color, vis, delay }) {
         border: `1px solid ${hov ? color + '50' : 'rgba(255,255,255,0.07)'}`,
         padding: '20px 16px', textAlign: 'center',
         transition: 'all 0.3s ease',
-        transform: vis ? (hov ? 'translateY(-5px)' : 'translateY(0)') : 'translateY(24px)',
+        transform: vis ? (hov ? 'translateY(-3px)' : 'translateY(0)') : 'translateY(24px)',
         opacity: vis ? 1 : 0,
         transitionDelay: `${delay}s`,
         cursor: 'default', position: 'relative', overflow: 'hidden',

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-scroll';
+import { trackEvent } from '../utils/analytics';
 
 const PHRASES = [
   'fast web apps.',
@@ -42,12 +43,12 @@ export default function Hero() {
     const t = setTimeout(() => {
       if (!del) {
         if (ci < word.length) { setTyped(word.slice(0, ci + 1)); setCi(c => c + 1); }
-        else setTimeout(() => setDel(true), 1800);
+        else setTimeout(() => setDel(true), 1450);
       } else {
         if (ci > 0) { setCi(c => c - 1); setTyped(word.slice(0, ci - 1)); }
         else { setDel(false); setPi(p => (p + 1) % PHRASES.length); }
       }
-    }, del ? 35 : 75);
+    }, del ? 52 : 92);
     return () => clearTimeout(t);
   }, [ci, del, pi]);
 
@@ -180,10 +181,20 @@ export default function Hero() {
             style={{ animationDelay: '0.6s', display: 'flex', gap: '14px', flexWrap: 'wrap' }}
           >
             <Link to="projects" smooth duration={700} offset={-80}>
-              <button className="btn btn-p">View Projects →</button>
+              <button
+                className="btn btn-p"
+                onClick={() => trackEvent('cta_view_projects_click', { section: 'hero' })}
+              >
+                View Projects →
+              </button>
             </Link>
             <Link to="contact" smooth duration={700} offset={-80}>
-              <button className="btn btn-g">Get In Touch</button>
+              <button
+                className="btn btn-g"
+                onClick={() => trackEvent('cta_get_in_touch_click', { section: 'hero' })}
+              >
+                Get In Touch
+              </button>
             </Link>
           </div>
 
